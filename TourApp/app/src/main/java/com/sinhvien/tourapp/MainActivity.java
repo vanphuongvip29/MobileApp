@@ -17,6 +17,8 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    // menu bottom
     BottomNavigationView bottomNavigationView;
     HomeFragment homeFragment = new HomeFragment();
     BillFragment billFragment = new BillFragment();
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //menu bottom
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
