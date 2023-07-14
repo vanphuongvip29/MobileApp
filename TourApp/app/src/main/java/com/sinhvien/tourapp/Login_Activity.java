@@ -3,25 +3,77 @@ package com.sinhvien.tourapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Login_Activity extends AppCompatActivity {
 
     TextView signupText;
+
+    //Login
+    EditText editUserName, editPassword;
+    Button btnLogin;
+
+    SQLiteDatabase database;
+    DBHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         signupText = (TextView) findViewById(R.id.signupText);
+
+        // ánh xạ Login
+        editUserName = (EditText) findViewById(R.id.inputUsername);
+        editPassword = (EditText) findViewById(R.id.inputPassword);
+        btnLogin = (Button)findViewById(R.id.loginButton);
+
+
         signupText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Login_Activity.this, Register_Activity.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(Login_Activity.this, Register_Activity.class);
+                startActivity(intent1);
             }
         });
+
+
+
+        // xử lý login :))
+        UserDatabaseHandler databaseHandler = new UserDatabaseHandler(this);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // lấy dl login
+                String username = editUserName.getText().toString();
+                String pass = editPassword.getText().toString();
+
+                // Kiểm tra thông tin đăng nhập
+                int checkrole = databaseHandler.checkLogin(username, pass);
+
+                if (checkrole == 0) {
+                    // Đăng nhập user
+                    Intent intent2 = new Intent(Login_Activity.this, MainActivity.class);
+                    startActivity(intent2);
+                } else if (checkrole == 1) {
+                    // Đăng nhập Admin
+                    Toast.makeText(Login_Activity.this, "Đăng nhập admin", Toast.LENGTH_SHORT).show();
+                }else {
+                    // Đăng nhập thất bại, thông báo người dùng
+                    Toast.makeText(Login_Activity.this, "Đăng nhập không thành công", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+
     }
 }

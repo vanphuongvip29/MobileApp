@@ -24,10 +24,13 @@ public class MainActivity extends AppCompatActivity {
     BillFragment billFragment = new BillFragment();
     AccountFragment accountFragment = new AccountFragment();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         //menu bottom
         bottomNavigationView = findViewById(R.id.bottom_navigation);

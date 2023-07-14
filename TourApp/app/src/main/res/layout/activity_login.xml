@@ -18,7 +18,7 @@
             android:textStyle="bold"
             android:textColor="@color/purple"/>
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/inputUsername"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/custom_edittext"
@@ -29,7 +29,7 @@
             android:textColor="@color/black"
             android:layout_marginTop="40dp"/>
         <EditText
-            android:id="@+id/password"
+            android:id="@+id/inputPassword"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/custom_edittext"
