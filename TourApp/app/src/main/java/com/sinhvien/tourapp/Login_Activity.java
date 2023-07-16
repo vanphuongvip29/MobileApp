@@ -65,6 +65,8 @@ public class Login_Activity extends AppCompatActivity {
                     startActivity(intent2);
                 } else if (checkrole == 1) {
                     // Đăng nhập Admin
+                    Intent intent3 = new Intent(Login_Activity.this, Administrators.class);
+                    startActivity(intent3);
                     Toast.makeText(Login_Activity.this, "Đăng nhập admin", Toast.LENGTH_SHORT).show();
                 }else {
                     // Đăng nhập thất bại, thông báo người dùng

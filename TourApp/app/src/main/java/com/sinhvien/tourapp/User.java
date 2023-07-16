@@ -1,5 +1,7 @@
 package com.sinhvien.tourapp;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 public class User {
@@ -9,17 +11,35 @@ public class User {
     private String avatar;
     private int role;
 
+
+    public User(){
+
+    }
     public User(String userName, String passWord){
         username = userName;
         password = passWord;
     }
 
-    // đăng ký có truyền role
-//    public User(String userName, String passWord, int Role){
-//        username = userName;
-//        password = passWord;
-//        role = Role;
-//    }
+
+//    dk avatar
+    public User(String userName, String passWord, String Avatar){
+        username = userName;
+        password = passWord;
+        avatar = Avatar;
+    }
+
+    // khởi tạo đọc user trong admin
+
+    // dk nếu có gửi role k mặc định là 0
+    public User(String userName, String passWord, String Avatar, int Role){
+        username = userName;
+        password = passWord;
+        avatar = Avatar;
+        role = Role;
+    }
+
+
+
 
 
     public int getId() {

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class UserDatabaseHandler {
 
@@ -24,6 +27,8 @@ public class UserDatabaseHandler {
         values.put(DBHelper.COT_USERNAME, user.getUsername());
         values.put(DBHelper.COT_PASSWORD, user.getPassword());
 
+        // thêm avatar
+        values.put(DBHelper.COT_AVATAR, user.getAvatar());
         // nếu có truyền thì lưu không thì default là 0;
         values.put(DBHelper.COT_USER_ROLE, user.getRole());
 
@@ -71,4 +76,28 @@ public class UserDatabaseHandler {
 
         return role;
     }
+
+    //Hiển thị dl
+    public ArrayList<User> getAllUser()
+    {
+        ArrayList<User> ls = new ArrayList<User>();
+        Cursor c = database.query(DBHelper.TEN_BANG_USER, null, null, null,
+                null, null, null);
+        c.moveToPosition(-1);
+        while (c.moveToNext()) {
+
+            User u = new User();
+
+            u.setUsername(c.getString(1));
+            u.setPassword(c.getString(2));
+            u.setAvatar(c.getString(3));
+            u.setRole(c.getInt(4));
+            ls.add(u);
+        }
+        c.close(); //dongs
+        return ls;
+    }
+
+
+
 }
