@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +89,7 @@ public class UserDatabaseHandler {
 
             User u = new User();
 
+            u.setId(c.getString(0));
             u.setUsername(c.getString(1));
             u.setPassword(c.getString(2));
             u.setAvatar(c.getString(3));
@@ -98,6 +100,33 @@ public class UserDatabaseHandler {
         return ls;
     }
 
+    // phương thức xoá User sử dụng  username
+    public int deleteNameUser(String username)
+    {
+        String where="_username=?";
+        int numberOFEntriesDeleted= dbHelper.getWritableDatabase().delete(DBHelper.TEN_BANG_USER, where, new String[]{username}) ;
+        return numberOFEntriesDeleted;
+    }
+
+    // phương thức xoá User sử dụng ID userName
+    public int deleteIDUser(String id)
+    {
+        String where="_id=?";
+        int numberOFEntriesDeleted= dbHelper.getWritableDatabase().delete(DBHelper.TEN_BANG_USER, where, new String[]{id}) ;
+        return numberOFEntriesDeleted;
+    }
+
+    //edit a User row
+    public long edit_User(User user) {
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.COT_USERNAME, user.getUsername());
+        values.put(DBHelper.COT_PASSWORD, user.getPassword());
+        values.put(DBHelper.COT_AVATAR, user.getAvatar());
+
+        return dbHelper.getWritableDatabase().update(DBHelper.TEN_BANG_USER, values,
+                DBHelper.COT_ID + " = "
+                        + user.getId(), null);
+    }
 
 
 }

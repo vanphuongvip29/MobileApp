@@ -20,7 +20,7 @@ import android.widget.Toast;
 public class Register_Activity extends AppCompatActivity {
 
     TextView txtSignin;
-    EditText editusername, editpassword, editcomfirmPassword;
+    EditText editusername, editpassword, confirmPassword;
     Button registerButton;
 
     UserDatabaseHandler userDatabaseHandler;
@@ -49,7 +49,7 @@ public class Register_Activity extends AppCompatActivity {
         // đăng ký
         editusername = (EditText) findViewById(R.id.username);
         editpassword = (EditText) findViewById(R.id.password);
-        editcomfirmPassword = (EditText) findViewById(R.id.comfirmPassword);
+        confirmPassword = (EditText) findViewById(R.id.confirmPassword);
         registerButton =(Button) findViewById(R.id.registerButton);
 
 
@@ -88,29 +88,41 @@ public class Register_Activity extends AppCompatActivity {
             public void onClick(View v) {
                 String username = editusername.getText().toString();
                 String password = editpassword.getText().toString();
-                String comfirmPassword = editcomfirmPassword.getText().toString();
+                String comfirmPassword = confirmPassword.getText().toString();
 
-                // lấy đường dẫn lưu xuống
-                Uri avatarUri = selectedAvatarUri;
-                // kt đường dẫn và ép kiểu
-                String imageUriString = null;
+//                Cách 1
+//                // lấy đường dẫn lưu xuống
+//                Uri avatarUri = selectedAvatarUri;
+//                // kt đường dẫn và ép kiểu
+//                String imageUriString = null;
 
-                if( avatarUri != null){
-                    imageUriString = avatarUri.toString();
+//                if( avatarUri != null){
+//                    imageUriString = avatarUri.toString();
+//                }
+
+                //        Cách 2
+                String iUriString;
+                if(selectedAvatarUri != null)
+                {
+                    iUriString = selectedAvatarUri.toString();
                 }
+                else {
+                    iUriString = null;
+                }
+
 
                 if(password.equals(comfirmPassword))
                 {
-                    User u = new User(username , password, imageUriString);
+                    User u = new User(username , password, iUriString);
                     long newRowId = userDatabaseHandler.addUser(u);
 
                     editusername.setText("");
                     editpassword.setText("");
-                    editcomfirmPassword.setText("");
+                    confirmPassword.setText("");
                     editusername.requestFocus();
 
                     if (newRowId != -1) {
-                        Toast.makeText(Register_Activity.this, "Đăng ký thành công. ID" + newRowId, Toast.LENGTH_LONG).show();
+                        Toast.makeText(Register_Activity.this, "Đăng ký thành công: " + newRowId, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(Register_Activity.this, Login_Activity.class);
                         startActivity(intent);
                     } else {

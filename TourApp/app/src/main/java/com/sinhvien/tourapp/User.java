@@ -5,7 +5,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 
 public class User {
-    private int id;
+    private String id;
     private String username;
     private String password;
     private String avatar;
@@ -39,14 +39,22 @@ public class User {
     }
 
 
+//    khởi tạo dùng để edit User
+    public User(String iD, String userName, String passWord, String Avatar){
+
+        id=iD;
+        username = userName;
+        password = passWord;
+        avatar = Avatar;
+
+    }
 
 
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

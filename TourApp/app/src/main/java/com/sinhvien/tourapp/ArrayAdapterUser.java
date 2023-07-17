@@ -45,6 +45,9 @@ public class ArrayAdapterUser extends ArrayAdapter {
             TextView tvPass = (TextView) convertView.findViewById(R.id.txtPassWord);
             TextView tvRole = (TextView) convertView.findViewById(R.id.txtRole);
 
+            //Thêm ID
+            TextView tvID = (TextView)convertView.findViewById(R.id.idUser);
+
             User emp = myArrayUser.get(pos);
 
             // đọc avatar
@@ -69,6 +72,9 @@ public class ArrayAdapterUser extends ArrayAdapter {
             tvUser.setText(emp.getUsername());
             tvPass.setText(emp.getPassword());
             tvRole.setText(String.valueOf(emp.getRole()));
+
+            //Id user
+            tvID.setText(emp.getId());
 
         }
 
