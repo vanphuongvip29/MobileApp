@@ -31,8 +31,6 @@ public class DialogAddUser extends AppCompatDialogFragment {
 
 
 
-
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -72,13 +70,18 @@ public class DialogAddUser extends AppCompatDialogFragment {
 
                             if(password.equals(edit_confirm))
                             {
-                                User u = new User(username , password, imageUriString);
-                                long newRowId = db.addUser(u);
+                                User add_u = new User(username , password, imageUriString);
+                                long newRowId = db.addUser(add_u);
 
                                 editUserName.setText("");
                                 editPassWord.setText("");
                                 edit_confirmPassword.setText("");
                                 editUserName.requestFocus();
+
+
+                                // load lại dữ liệu sau khi add
+                                User load_u = new User(String.valueOf(newRowId), username , password, imageUriString);
+                                listener.onUserAdded(load_u);
 
                                 if (newRowId != -1) {
                                     Toast.makeText(getContext(), "Đăng ký thành công. ID" + newRowId, Toast.LENGTH_LONG).show();
@@ -135,9 +138,19 @@ public class DialogAddUser extends AppCompatDialogFragment {
         }
     }
 
+    // load lại dữ liệu sau khi add
+    // Khai báo interface để giao tiếp với Activity
+    public interface AddUserDialogListener {
+        void onUserAdded(User user);
+    }
+
+    private AddUserDialogListener listener;
 
 
-
+    // Setter cho listener
+    public void setListener(AddUserDialogListener listener) {
+        this.listener = listener;
+    }
 
 
 }

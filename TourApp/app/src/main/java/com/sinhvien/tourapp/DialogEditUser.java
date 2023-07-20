@@ -42,6 +42,9 @@ public class DialogEditUser extends AppCompatDialogFragment {
     }
 
 
+
+
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -73,10 +76,7 @@ public class DialogEditUser extends AppCompatDialogFragment {
                     .load(imageUriString)
                     .into(img_avatarImageView);
         }
-//        mac dinh khi khong co avatar
-//        else {
-//            img_avatarImageView.setImageResource(R.drawable.avt);
-//        }
+
 
         // chọn ảnh
 
@@ -130,7 +130,7 @@ public class DialogEditUser extends AppCompatDialogFragment {
 
                         if(password.equals(edit_confirm))
                         {
-                            Toast.makeText(getContext(), "đường dẫn avatar: " + iUriString, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(), "đường dẫn avatar: " + iUriString, Toast.LENGTH_SHORT).show();
 
                             User u = new User(user.getId(),username , password, iUriString);
                             long newRowId = db.edit_User(u);
@@ -139,6 +139,10 @@ public class DialogEditUser extends AppCompatDialogFragment {
                             editPassWord.setText("");
                             edit_confirmPassword.setText("");
                             editUserName.requestFocus();
+
+                            // edit load
+                            editUserDialogListener.onUserEdit(u);
+
 
                             if (newRowId != -1) {
                                 Toast.makeText(getContext(), "Edit thành công", Toast.LENGTH_SHORT).show();
@@ -175,5 +179,23 @@ public class DialogEditUser extends AppCompatDialogFragment {
             img_avatarImageView.setImageURI(selectedAvatarUri);
         }
     }
+
+
+    ///
+    public interface EditUserDialogListener {
+        void onUserEdit(User user);
+    }
+    private EditUserDialogListener editUserDialogListener;
+
+
+    // Setter cho listener
+    public void setListener(EditUserDialogListener listeneredit) {
+        this.editUserDialogListener = listeneredit;
+    }
+
+
+
+
+
 
 }

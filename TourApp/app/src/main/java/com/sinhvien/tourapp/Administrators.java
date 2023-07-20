@@ -2,34 +2,35 @@ package com.sinhvien.tourapp;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatDialogFragment;
+
 
 import android.content.DialogInterface;
-import android.database.Cursor;
+
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
+
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+
 
 import java.util.ArrayList;
-import java.util.List;
+
+
 
 public class Administrators extends AppCompatActivity {
 
     ListView lvUsers;
 
-    DBHelper dbHelper;
-    SQLiteDatabase database;
+//    DBHelper dbHelper;
+//    SQLiteDatabase database;
 
     //add User
     Button btn_AddUser;
@@ -37,15 +38,22 @@ public class Administrators extends AppCompatActivity {
     //chuan bi du lieu cho listview
     ArrayList<User> ds = new ArrayList<User>();
 
+    ArrayAdapterUser myArrayAdapterUser;
+
     // lấy dl id user của listview
     String idUser;
 
     //edit User
     User edit_User;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_administrators);
+
 
 
         lvUsers = (ListView) findViewById(R.id.lvUser);
@@ -56,7 +64,8 @@ public class Administrators extends AppCompatActivity {
         //add sl vao
         ds = userDatabaseHandler.getAllUser();
         // set adater
-        ArrayAdapterUser myArrayAdapterUser = new ArrayAdapterUser(this, R.layout.item_list_user,ds);
+
+        myArrayAdapterUser = new ArrayAdapterUser(this, R.layout.item_list_user,ds);
         lvUsers.setAdapter(myArrayAdapterUser);
 
         // Add User
@@ -66,6 +75,10 @@ public class Administrators extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openAddDiaLog();
+
+                //khi add thành công cập nhật listView
+                myArrayAdapterUser.notifyDataSetChanged();
+
             }
 
 
@@ -76,7 +89,7 @@ public class Administrators extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // Xử lý sự kiện khi phần tử trong ListView được giữ lâu
-                // lấy username item
+                // lấy id username item
                 idUser = ds.get(position).getId();
 
                 // lấy đối tượng user trong listView
@@ -89,12 +102,27 @@ public class Administrators extends AppCompatActivity {
 
 
 
+
+
     }
 
     // xử lý add dialog
     public void openAddDiaLog(){
             DialogAddUser dialogAddUser = new DialogAddUser();
-            dialogAddUser.show(getSupportFragmentManager(), "add user dialog");
+            // load lại dữ liệu sau khi add
+            dialogAddUser.setListener(new DialogAddUser.AddUserDialogListener() {
+            @Override
+            public void onUserAdded(User user) {
+                // Thêm User vào danh sách
+                ds.add(user);
+
+                // Tải lại ListView
+                myArrayAdapterUser.notifyDataSetChanged();
+            }
+
+        });
+        dialogAddUser.show(getSupportFragmentManager(), "add_user_dialog");
+
     }
 
 
@@ -113,11 +141,22 @@ public class Administrators extends AppCompatActivity {
                         switch (which) {
                             case 0:
                                 // Thực hiện chỉnh sửa
+                                //1
                                 openEditDiaLog();
+
+
                                 break;
                             case 1:
                                 // Thực hiện xóa
                                 userDatabaseHandler.deleteIDUser(idUser);
+
+//                                cập nhật lại listView
+                                ds.remove(edit_User);
+                                myArrayAdapterUser.notifyDataSetChanged();
+
+
+
+
                                 Toast.makeText(Administrators.this, "Xóa thành công ID: " +idUser, Toast.LENGTH_SHORT).show();
                                 break;
                         }
@@ -131,8 +170,27 @@ public class Administrators extends AppCompatActivity {
     // goi dialog edit
     public void openEditDiaLog(){
         DialogEditUser dialogEditUser = new DialogEditUser(edit_User);
+
+        //
+        dialogEditUser.setListener(new DialogEditUser.EditUserDialogListener() {
+            @Override
+            public void onUserEdit(User user) {
+
+                // Thêm User vào danh sách
+                ds.remove(edit_User);
+                ds.add(user);
+
+                // Tải lại ListView
+                myArrayAdapterUser.notifyDataSetChanged();
+            }
+
+        });
+        //
+
         dialogEditUser.show(getSupportFragmentManager(), "edit user dialog");
     }
+
+
 
 
 }
