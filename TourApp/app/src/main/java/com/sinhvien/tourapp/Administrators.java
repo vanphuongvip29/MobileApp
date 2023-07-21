@@ -27,13 +27,12 @@ import java.util.ArrayList;
 
 public class Administrators extends AppCompatActivity {
 
-    ListView lvUsers;
+    ListView lvUsers, lvTour;
 
-//    DBHelper dbHelper;
-//    SQLiteDatabase database;
+
 
     //add User
-    Button btn_AddUser;
+    Button btn_AddUser , btn_AddTour;
 
     //chuan bi du lieu cho listview
     ArrayList<User> ds = new ArrayList<User>();
@@ -47,6 +46,11 @@ public class Administrators extends AppCompatActivity {
     User edit_User;
 
 
+    //quản lý tour
+
+    ArrayList<Tour> dsTour = new ArrayList<Tour>();
+
+    ArrayAdapterTour myArrayAdapterTour;
 
 
     @Override
@@ -76,8 +80,6 @@ public class Administrators extends AppCompatActivity {
             public void onClick(View v) {
                 openAddDiaLog();
 
-                //khi add thành công cập nhật listView
-                myArrayAdapterUser.notifyDataSetChanged();
 
             }
 
@@ -101,6 +103,25 @@ public class Administrators extends AppCompatActivity {
         });
 
 
+
+        //Quan ly Tour
+        lvTour = (ListView)findViewById(R.id.lvTour);
+
+        TourDatabaseHandler tourDatabaseHandler = new TourDatabaseHandler(this);
+
+        dsTour = tourDatabaseHandler.getAllTour();
+
+        myArrayAdapterTour = new ArrayAdapterTour(this, R.layout.item_list_tour,dsTour);
+        lvTour.setAdapter(myArrayAdapterTour);
+
+        btn_AddTour = (Button) findViewById(R.id.btn_addTour);
+        btn_AddTour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAddDialogTour();
+
+              }
+        });
 
 
 
@@ -191,6 +212,22 @@ public class Administrators extends AppCompatActivity {
     }
 
 
+    // quan ly tour
+    public void openAddDialogTour(){
+        DialogAddTour dialogAddTour = new DialogAddTour();
 
+        // load lại dữ liệu sau khi add
+        dialogAddTour.setListenerTour(new DialogAddTour.AddTourDialogListener() {
+            @Override
+            public void onTourAdded(Tour tour) {
+                dsTour.add(tour);
 
+                myArrayAdapterTour.notifyDataSetChanged();
+            }
+        });
+        dialogAddTour.show(getSupportFragmentManager(), "add_tour_dialog");
+    }
 }
+
+
+

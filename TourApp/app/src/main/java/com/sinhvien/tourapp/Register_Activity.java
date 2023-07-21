@@ -110,6 +110,8 @@ public class Register_Activity extends AppCompatActivity {
                     iUriString = null;
                 }
 
+                //dk admin
+//                int role =1;
 
                 if(password.equals(comfirmPassword))
                 {
