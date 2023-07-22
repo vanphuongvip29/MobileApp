@@ -99,6 +99,25 @@
                 android:text="Thêm Category"/>
 
         </RelativeLayout>
+        <TableLayout android:layout_height="match_parent"
+            android:layout_width="match_parent">
+            <TableRow>
+
+                <TextView
+                    android:layout_width="30dp"
+                    android:background="#c98282"
+                    android:gravity="center"
+                    android:text="id" />
+
+                <TextView
+                    android:layout_width="74dp"
+                    android:background="#c98282"
+                    android:gravity="center"
+                    android:text="Name" />
+
+            </TableRow>
+
+        </TableLayout>
 
         <ListView
             android:id="@+id/lvCategory"
@@ -126,6 +145,43 @@
                 android:text="Thêm Tour"/>
 
         </RelativeLayout>
+
+        <TableLayout android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:stretchColumns="1">
+            <TableRow>
+                <TextView
+                    android:layout_width="74dp"
+                    android:background="#c98282"
+                    android:gravity="center"
+                    android:text="Avatar" />
+
+                <TextView
+                    android:layout_width="74dp"
+                    android:background="#c98282"
+                    android:gravity="center"
+                    android:text="id Tour" />
+
+                <TextView
+                    android:layout_width="74dp"
+                    android:background="#c98282"
+                    android:gravity="center"
+                    android:text="Name" />
+                <TextView
+                    android:layout_width="74dp"
+                    android:background="#c98282"
+                    android:gravity="center"
+                    android:text="Price" />
+                <TextView
+                    android:layout_width="74dp"
+                    android:background="#c98282"
+                    android:gravity="center"
+                    android:text="Location" />
+
+
+            </TableRow>
+
+        </TableLayout>
 
         <ListView
             android:id="@+id/lvTour"
