@@ -11,9 +11,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -27,12 +29,12 @@ import java.util.ArrayList;
 
 public class Administrators extends AppCompatActivity {
 
-    ListView lvUsers, lvTour;
+    ListView lvUsers, lvTour, lvCategory;
 
 
 
     //add User
-    Button btn_AddUser , btn_AddTour;
+    Button btn_AddUser , btn_AddTour, btn_addCategory;
 
     //chuan bi du lieu cho listview
     ArrayList<User> ds = new ArrayList<User>();
@@ -51,6 +53,16 @@ public class Administrators extends AppCompatActivity {
     ArrayList<Tour> dsTour = new ArrayList<Tour>();
 
     ArrayAdapterTour myArrayAdapterTour;
+
+    //quản lý Category
+    String idCategory;
+
+    Category edit_Category;
+
+    ArrayList<Category> dsCategory = new ArrayList<Category>();
+
+    ArrayAdapter myArrayAdapterCategory;
+
 
 
     @Override
@@ -123,7 +135,43 @@ public class Administrators extends AppCompatActivity {
               }
         });
 
+        // quan lý category
+        lvCategory =(ListView)findViewById(R.id.lvCategory) ;
 
+        CategoryDatabaseHandler categoryDatabaseHandler = new CategoryDatabaseHandler(this);
+
+
+        dsCategory = categoryDatabaseHandler.getAllCategory();
+
+        myArrayAdapterCategory = new ArrayAdapter<Category>(Administrators.this, android.R.layout.simple_list_item_1, dsCategory);
+
+        lvCategory.setAdapter(myArrayAdapterCategory);
+
+        //xử lý listView cate
+        lvCategory.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // Xử lý sự kiện khi phần tử trong ListView được giữ lâu
+                // lấy id category item
+                idCategory = dsCategory.get(position).getId();
+
+                // lấy đối tượng category trong listView
+                edit_Category = dsCategory.get(position);
+
+                showEditDeleteDialogCategory();
+                return true;
+            }
+        });
+
+
+
+        btn_addCategory = (Button) findViewById(R.id.btn_addCategory);
+        btn_addCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAddDialogCategory();
+            }
+        });
 
     }
 
@@ -227,6 +275,56 @@ public class Administrators extends AppCompatActivity {
         });
         dialogAddTour.show(getSupportFragmentManager(), "add_tour_dialog");
     }
+
+
+    // quan ly category
+    public void openAddDialogCategory(){
+        DialogAddCategory dialogAddCategory = new DialogAddCategory();
+        dialogAddCategory.setListener(new DialogAddCategory.AddCategoryDialogListener() {
+            @Override
+            public void onCategoryAdded(Category category) {
+                dsCategory.add(category);
+
+                myArrayAdapterCategory.notifyDataSetChanged();
+            }
+        });
+        dialogAddCategory.show(getSupportFragmentManager(), "add category dialog");
+    }
+
+    private void showEditDeleteDialogCategory() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Tạo đối tượng tạo database
+        CategoryDatabaseHandler categoryDatabaseHandler = new CategoryDatabaseHandler(this);
+
+
+        builder.setTitle("Thao tác")
+                .setItems(new CharSequence[]{"Chỉnh sửa", "Xóa"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                // Thực hiện chỉnh sửa
+
+
+                                break;
+                            case 1:
+                                // Thực hiện xóa
+                                categoryDatabaseHandler.deleteIDCategory(idCategory);
+
+//                                cập nhật lại listView
+                                dsCategory.remove(edit_Category);
+                                myArrayAdapterCategory.notifyDataSetChanged();
+
+
+                                Toast.makeText(Administrators.this, "Xóa thành công ID: " +idCategory, Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    }
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
 }
 
 
