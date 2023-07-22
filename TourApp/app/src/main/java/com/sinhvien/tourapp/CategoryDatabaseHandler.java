@@ -56,4 +56,14 @@ public class CategoryDatabaseHandler {
         int numberOFEntriesDeleted= dbHelper.getWritableDatabase().delete(DBHelper.TEN_BANG_CATEGORY, where, new String[]{id}) ;
         return numberOFEntriesDeleted;
     }
+
+    public long edit_Category(Category category) {
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.COT_NAME_CATEGORY, category.getCategory_name());
+
+
+        return dbHelper.getWritableDatabase().update(DBHelper.TEN_BANG_CATEGORY, values,
+                DBHelper.COT_ID + " = "
+                        + category.getId(), null);
+    }
 }

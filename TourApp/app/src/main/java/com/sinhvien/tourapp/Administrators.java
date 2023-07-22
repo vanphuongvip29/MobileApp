@@ -304,7 +304,7 @@ public class Administrators extends AppCompatActivity {
                         switch (which) {
                             case 0:
                                 // Thực hiện chỉnh sửa
-
+                                openEditDiaLogCategory();
 
                                 break;
                             case 1:
@@ -324,6 +324,28 @@ public class Administrators extends AppCompatActivity {
                 .setNegativeButton("Hủy", null)
                 .show();
     }
+
+    public void openEditDiaLogCategory(){
+        DialogEditCategory dialogEditCategory = new DialogEditCategory(edit_Category);
+        //
+        dialogEditCategory.setListener(new DialogEditCategory.EditCategoryDialogListener() {
+            @Override
+            public void onCategoryEdit(Category category) {
+                // Thêm Category vào danh sách
+                dsCategory.remove(edit_Category);
+                dsCategory.add(category);
+
+                // Tải lại ListView
+                myArrayAdapterCategory.notifyDataSetChanged();
+            }
+        });
+
+
+        //
+
+        dialogEditCategory.show(getSupportFragmentManager(), "edit category dialog");
+    }
+
 
 }
 
