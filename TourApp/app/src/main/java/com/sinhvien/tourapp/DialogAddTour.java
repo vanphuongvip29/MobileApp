@@ -7,13 +7,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +26,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -42,6 +47,16 @@ public class DialogAddTour extends AppCompatDialogFragment {
     private static final int REQUEST_SELECT_AVATAR = 1;
 
     private Uri selectedAvatarUri;
+
+    //spinner category
+    Spinner spinner_Category;
+
+    ArrayList<Category> dsCategory = new ArrayList<Category>();
+
+    ArrayAdapter myArrayAdapterCategory;
+
+    String idCategory;
+
 
     @NonNull
     @Override
@@ -84,10 +99,35 @@ public class DialogAddTour extends AppCompatDialogFragment {
         imageViewEndDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDatePickerDialog();
+                showDatePickerDialogEnd();
             }
         });
 
+        // spinner Category
+
+        spinner_Category =(Spinner)view.findViewById(R.id.spinnerCategory);
+
+        CategoryDatabaseHandler categoryDatabaseHandler = new CategoryDatabaseHandler(getContext());
+
+        dsCategory = categoryDatabaseHandler.getAllCategory();
+
+        myArrayAdapterCategory = new ArrayAdapter<Category>(getContext(), android.R.layout.simple_list_item_1, dsCategory);
+
+        spinner_Category.setAdapter(myArrayAdapterCategory);
+
+        spinner_Category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                 lấy id category item
+                idCategory = dsCategory.get(position).getId();
+                Log.i("categorry id :", "là : " + idCategory);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
 
@@ -113,6 +153,8 @@ public class DialogAddTour extends AppCompatDialogFragment {
                         String endday = editEndDay.getText().toString();
                         String discount = editDiscount.getText().toString();
 
+
+
                         // lấy đường dẫn lưu xuống
                         Uri avatarUri = selectedAvatarUri;
                         // kt đường dẫn và ép kiểu
@@ -124,18 +166,18 @@ public class DialogAddTour extends AppCompatDialogFragment {
 
 
                             Tour add_t = new Tour(tourname , Double.parseDouble(price), description, location,
-                                    startday,endday, Double.parseDouble(discount),imageUriString);
+                                    startday,endday, Double.parseDouble(discount),imageUriString, idCategory);
                             long newRowId = db.addTour(add_t);
+
+
 
                             //loadd
                             Tour add_load = new Tour(String.valueOf(newRowId), tourname , Double.parseDouble(price), description, location,
-                                    startday,endday, Double.parseDouble(discount),imageUriString);
+                                    startday,endday, Double.parseDouble(discount),imageUriString, idCategory);
 
                             listener_t.onTourAdded(add_load);
 
-                            editTourName.setText("");
 
-                            editTourName.requestFocus();
 
 
                             if (newRowId != -1) {
@@ -168,7 +210,7 @@ public class DialogAddTour extends AppCompatDialogFragment {
     }
 
 
-    //ngày
+    //ngày bắt đầu
     private void showDatePickerDialog() {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireContext(),
@@ -191,6 +233,30 @@ public class DialogAddTour extends AppCompatDialogFragment {
         editStartDay.setText(selectedDate);
     }
 
+    //ngày kết thúc
+    private void showDatePickerDialogEnd() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                requireContext(),
+                this::onDateSetEnd,
+                year, month, day
+        );
+        datePickerDialog.show();
+    }
+    private void onDateSetEnd(DatePicker view, int year, int month, int dayOfMonth) {
+        // Lưu lại ngày, tháng và năm đã chọn
+        this.year = year;
+        this.month = month;
+        this.day = dayOfMonth;
+
+        // Cập nhật TextView với ngày đã chọn
+        updateStartDayEnd();
+    }
+    private void updateStartDayEnd() {
+        String selectedDate = day + "/" + (month + 1) + "/" + year;
+        editEndDay.setText(selectedDate);
+    }
+
+
 
     // avatar
     @Override
@@ -206,6 +272,7 @@ public class DialogAddTour extends AppCompatDialogFragment {
         }
     }
 
+
     // load lại dữ liệu sau khi add
     // Khai báo interface để giao tiếp với Activity
     public interface AddTourDialogListener {
@@ -219,5 +286,7 @@ public class DialogAddTour extends AppCompatDialogFragment {
     public void setListenerTour(AddTourDialogListener listener) {
         this.listener_t = listener;
     }
+
+
 
 }

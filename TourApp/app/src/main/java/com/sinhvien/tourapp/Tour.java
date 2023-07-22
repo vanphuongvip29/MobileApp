@@ -13,11 +13,24 @@ public class Tour {
     private double discount;
     private String avatar;
 
+    private String category_id;
+
+    //thêm category
+
+
+    public String getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
+    }
+
     public Tour(){
 
     }
     public Tour(String tour_name, double price, String description, String location, String start_day, String end_day,
-                double discount, String avatar){
+                double discount, String avatar, String category_id){
         this.tour_name = tour_name;
         this.price = price;
         this.description = description;
@@ -26,11 +39,13 @@ public class Tour {
         this.end_day = end_day;
         this.discount = discount;
         this.avatar = avatar;
+        this.category_id = category_id;
+
 
     }
 
     public Tour(String id_Tour,String tour_name, double price, String description, String location, String start_day, String end_day,
-                double discount, String avatar){
+                double discount, String avatar, String category_id){
         this.id = id_Tour;
         this.tour_name = tour_name;
         this.price = price;
@@ -40,6 +55,8 @@ public class Tour {
         this.end_day = end_day;
         this.discount = discount;
         this.avatar = avatar;
+        this.category_id = category_id;
+
 
     }
 

@@ -31,6 +31,8 @@ public class TourDatabaseHandler {
         values.put(DBHelper.COT_DISCOUNT_TOUR, tour.getDiscount());
         values.put(DBHelper.COT_AVATAR, tour.getAvatar());
 
+        values.put(DBHelper.COT_TOUR_CATEGORY_ID, tour.getCategory_id());
+
 
 
         long newRowId = db.insert(DBHelper.TEN_BANG_TOUR, null, values);
@@ -57,10 +59,44 @@ public class TourDatabaseHandler {
             t.setPrice(Double.parseDouble(c.getString(2)));
             t.setAvatar(c.getString(7));
             t.setLocation(c.getString(4));
+
+            //them
+            t.setDescription(c.getString(3));
+            t.setStart_day(c.getString(5));
+            t.setEnd_day(c.getString(6));
+            t.setDiscount(Double.parseDouble(c.getString(8)));
+            t.setCategory_id(c.getString(9));
+
             ls.add(t);
         }
         c.close(); //dongs
         return ls;
+    }
+
+    //edit a Tour row
+    public long edit_Tour(Tour tour) {
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.COT_NAME_TOUR, tour.getTour_name());
+        values.put(DBHelper.COT_PRICE_TOUR, tour.getPrice());
+        values.put(DBHelper.COT_DESCRIPTION_TOUR, tour.getDescription());
+        values.put(DBHelper.COT_LOCATION_TOUR, tour.getLocation());
+        values.put(DBHelper.COT_START_DAY_TOUR, tour.getStart_day());
+        values.put(DBHelper.COT_END_DAY_TOUR, tour.getEnd_day());
+        values.put(DBHelper.COT_DISCOUNT_TOUR, tour.getDiscount());
+        values.put(DBHelper.COT_AVATAR, tour.getAvatar());
+        values.put(DBHelper.COT_TOUR_CATEGORY_ID, tour.getCategory_id());
+
+        return dbHelper.getWritableDatabase().update(DBHelper.TEN_BANG_TOUR, values,
+                DBHelper.COT_ID + " = "
+                        + tour.getId(), null);
+    }
+
+    // phương thức xoá User sử dụng ID userName
+    public int deleteIDTour(String id)
+    {
+        String where="_id=?";
+        int numberOFEntriesDeleted= dbHelper.getWritableDatabase().delete(DBHelper.TEN_BANG_TOUR, where, new String[]{id}) ;
+        return numberOFEntriesDeleted;
     }
 
 }

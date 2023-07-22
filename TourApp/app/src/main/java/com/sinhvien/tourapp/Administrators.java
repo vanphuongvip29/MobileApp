@@ -50,6 +50,8 @@ public class Administrators extends AppCompatActivity {
 
     //quản lý tour
 
+    String idTour;
+    Tour edit_Tour;
     ArrayList<Tour> dsTour = new ArrayList<Tour>();
 
     ArrayAdapterTour myArrayAdapterTour;
@@ -133,6 +135,20 @@ public class Administrators extends AppCompatActivity {
                 openAddDialogTour();
 
               }
+        });
+
+        lvTour.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // Xử lý sự kiện khi phần tử trong ListView được giữ lâu
+                // lấy id category item
+                idTour = dsTour.get(position).getId();
+
+                // láy Tour
+                edit_Tour = dsTour.get(position);
+                showEditDeleteDialogTour();
+                return true;
+            }
         });
 
         // quan lý category
@@ -274,6 +290,55 @@ public class Administrators extends AppCompatActivity {
             }
         });
         dialogAddTour.show(getSupportFragmentManager(), "add_tour_dialog");
+    }
+
+    private void showEditDeleteDialogTour() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Tạo đối tượng tạo database
+        TourDatabaseHandler tourDatabaseHandler = new TourDatabaseHandler(this);
+
+
+        builder.setTitle("Thao tác")
+                .setItems(new CharSequence[]{"Chỉnh sửa", "Xóa"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                // Thực hiện chỉnh sửa
+
+                                openEditDiaLogTour();
+                                break;
+                            case 1:
+                                // Thực hiện xóa
+                                tourDatabaseHandler.deleteIDTour(idTour);
+
+//                                cập nhật lại listView
+                                dsTour.remove(edit_Tour);
+                                myArrayAdapterTour.notifyDataSetChanged();
+                                break;
+                        }
+                    }
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    public void openEditDiaLogTour(){
+        DialogEditTour dialogEditTour = new DialogEditTour(edit_Tour);
+
+        dialogEditTour.setListener(new DialogEditTour.EditTourDialogListener() {
+            @Override
+            public void onTourEdit(Tour tour) {
+                // Thêm tour vào danh sách
+                dsTour.remove(edit_Tour);
+                dsTour.add(tour);
+
+                // Tải lại ListView
+                myArrayAdapterTour.notifyDataSetChanged();
+            }
+        });
+
+        dialogEditTour.show(getSupportFragmentManager(), "edit category dialog");
     }
 
 
