@@ -50,6 +50,8 @@ public class CategoryDatabaseHandler {
         return ls;
     }
 
+
+
     public int deleteIDCategory(String id)
     {
         String where="_id=?";

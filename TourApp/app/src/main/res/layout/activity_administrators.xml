@@ -104,12 +104,6 @@
             <TableRow>
 
                 <TextView
-                    android:layout_width="30dp"
-                    android:background="#c98282"
-                    android:gravity="center"
-                    android:text="id" />
-
-                <TextView
                     android:layout_width="74dp"
                     android:background="#c98282"
                     android:gravity="center"
