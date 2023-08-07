@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CategoryDatabaseHandler {
 
@@ -68,4 +70,20 @@ public class CategoryDatabaseHandler {
                 DBHelper.COT_ID + " = "
                         + category.getId(), null);
     }
+
+    // Phương thức giả định để lấy tập hợp các danh mục duy nhất từ cơ sở dữ liệu
+    public Set<String> getAllCategoriesFilter() {
+        Set<String> categories = new HashSet<>();
+
+        String[] projection = {DBHelper.COT_ID};
+        Cursor cursor = db.query(true, DBHelper.TEN_BANG_CATEGORY, projection, null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            int categoryColumnIndex = cursor.getColumnIndex(DBHelper.COT_ID);
+            String category = cursor.getString(categoryColumnIndex);
+            categories.add(category);
+        }
+        cursor.close();
+        return categories;
+    }
+
 }
